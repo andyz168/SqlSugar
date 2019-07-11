@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OrmTest.Models;
+using SMESCore.Model.BaseEntity;
 
 namespace OrmTest.Demo
 {
@@ -49,17 +51,17 @@ namespace OrmTest.Demo
         {
             SqlSugarClient db = new SqlSugarClient(new ConnectionConfig()
             {
-                ConnectionString = Config.ConnectionString,
+                ConnectionString = Config.ConnectionStringLocalDb,
                 DbType = DbType.SqlServer,
                 IsAutoCloseConnection = true,
                 InitKeyType = InitKeyType.Attribute 
             });
 
             //Backup table
-            //db.CodeFirst.BackupTable().InitTables(typeof(CodeTable),typeof(CodeTable2));
+            //db.CodeFirst.BackupTable().InitTables(typeof(Student), typeof(EquWorkHours));
 
             //No backup table
-            db.CodeFirst.SetStringDefaultLength(10).InitTables(typeof(CodeTable),typeof(CodeTable2));
+            db.CodeFirst.SetStringDefaultLength(20).InitTables(typeof(Student),typeof(EquWorkHours));
 
 
             db.CodeFirst.InitTables(typeof(CodeTable3));

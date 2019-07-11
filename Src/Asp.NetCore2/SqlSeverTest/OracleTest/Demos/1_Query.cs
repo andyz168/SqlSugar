@@ -19,9 +19,9 @@ namespace OrmTest.Demo
         {
             mytest();
             myordreby();
+            Where();
             //Easy();
             //Page();
-            //Where();
             //Join();
             //Funs();
             //Select();
@@ -39,17 +39,17 @@ namespace OrmTest.Demo
             UnitTest.UnitTestBase testBase = new UnitTest.UnitTestBase();
             testBase.Begin();
             var connec = new OracleConnection(Config.ConnectionString);
-            var cmd = new OracleCommand("SELECT t.* FROM aps.equ_work_hours_bak t join aps.equ_work_hours_ver_bak t1 on t1.equ_work_hours_ver_id=t.equ_work_hours_ver_id",connec);
+            var cmd = new OracleCommand("SELECT t.* FROM aps.equ_work_hours t join aps.equ_work_hours_ver t1 on t1.equ_work_hours_ver_id=t.equ_work_hours_ver_id",connec);
             var adp = new OracleDataAdapter(cmd);
             var dt = new DataTable();
             var dataset = adp.Fill(dt);
             testBase.End("joinadonettable");
             testBase.Begin();
-            var joinado = db.Ado.GetDataTable("SELECT t.* FROM aps.equ_work_hours_bak t join aps.equ_work_hours_ver_bak t1 on t1.equ_work_hours_ver_id=t.equ_work_hours_ver_id");
+            var joinado = db.Ado.GetDataTable("SELECT t.* FROM aps.equ_work_hours t join aps.equ_work_hours_ver t1 on t1.equ_work_hours_ver_id=t.equ_work_hours_ver_id");
             testBase.End("joinadotable");
             testBase.Begin();
             var join = db.Queryable<EquWorkHours, EquWorkHoursVer>((e,e1)=>new object[] { JoinType.Inner,e.EquWorkHoursVerId==e1.EquWorkHoursVerId})
-                .Select((e,e1)=>new EquWorkhoursViewModel{ EquWorkHours=e,Factoryname=e1.Factoryid.ToString(),Vername=e1.Vername}).ToDataTable();
+                .Select((e,e1)=>new EquWorkhoursViewModel{ EquWorkHours=e,Vername=e1.Vername}).ToDataTable();
             testBase. End("jointable");
             var getequhouts = db.Queryable<EquWorkHours>().ToDataTable();
             var getver = db.Queryable<EquWorkHoursVer>().ToDataTable();
@@ -235,12 +235,11 @@ namespace OrmTest.Demo
         {
             var db = GetInstance();
             //join 
-            var list = db.Queryable<Student, School>((st, sc) => new object[] {
-              JoinType.Left,st.SchoolId==sc.Id
-            })
-            .Where((st, sc) => sc.Id == 1)
-            .Where((st, sc) => st.Id == 1)
-            .Where((st, sc) => st.Id == 1 && sc.Id == 2).ToList();
+            var list = db.Queryable<EquWorkHoursVer, EquWorkHours>((st, sc) => new object[] {
+              JoinType.Left,st.EquWorkHoursVerId==sc.EquWorkHoursVerId
+            }) 
+            .Where((st, sc) => st.EquWorkHoursVerId == "70d805027fbb45cb839204bc13d4b695")
+            .Where((st, sc) => sc.EquWorkHoursId == "1d33edf864d34ef699a1a35485bd5648").ToList();
 
             //SELECT [st].[Id],[st].[SchoolId],[st].[Name],[st].[CreateTime] FROM [Student] st 
             //Left JOIN School sc ON ( [st].[SchoolId] = [sc].[Id] )   
@@ -250,9 +249,8 @@ namespace OrmTest.Demo
             //Where If
             string name = null;
             string name2 = "sunkaixuan";
-            var list2 = db.Queryable<Student>()
-                 .WhereIF(!string.IsNullOrEmpty(name), it => it.Name == name)
-                 .WhereIF(!string.IsNullOrEmpty(name2), it => it.Name == name2).ToList();
+            var list2 = db.Queryable<EquWorkHoursVer>() 
+                 .WhereIF(!string.IsNullOrEmpty(name2), it => it.Vername == name2).ToList();
 
 
 

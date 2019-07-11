@@ -15,7 +15,7 @@ namespace OrmTest.Demo
             var db = GetInstance();
             db.IgnoreColumns.Add("TestId", "Student");
 
-            var insertObj = new Student() { Name = "jack", CreateTime = Convert.ToDateTime("2010-1-1"), SchoolId = 1 };
+            var insertObj = new Student() { Name = "jack",  SchoolId = 1 };
 
             //Insert reutrn Insert Count
             var t2 = db.Insertable(insertObj).ExecuteCommand();
